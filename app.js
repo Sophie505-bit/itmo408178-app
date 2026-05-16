@@ -19,7 +19,7 @@ export default function appSrc(express, bodyParser, createReadStream, crypto, ht
   });
 
   app.get('/login/', (req, res) => {
-    res.send('sofia');
+    res.send('itmo408178');
   });
 
   app.get('/code/', (req, res) => {
@@ -52,7 +52,7 @@ export default function appSrc(express, bodyParser, createReadStream, crypto, ht
   app.post('/req/', handleReq);
 
   app.all('*', (req, res) => {
-    res.send('sofia');
+    res.send('itmo408178');
   });
 
   return app;
