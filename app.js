@@ -1,12 +1,15 @@
 export default function appSrc(express, bodyParser, createReadStream, crypto, http) {
   const app = express();
+
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
+
   app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,OPTIONS,DELETE');
     next();
   });
+
   app.use((req, res, next) => {
     if (!req.path.endsWith('/')) {
       const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
@@ -14,30 +17,43 @@ export default function appSrc(express, bodyParser, createReadStream, crypto, ht
     }
     next();
   });
+
   app.get('/login/', (req, res) => {
-    res.send('itmo408178');
+    res.send('sofia');
   });
+
   app.get('/code/', (req, res) => {
     const filePath = import.meta.url.substring(7);
-    const stream = createReadStream(filePath);
-    stream.pipe(res);
+    createReadStream(filePath).pipe(res);
   });
+
   app.get('/sha1/:input/', (req, res) => {
     const hash = crypto.createHash('sha1').update(req.params.input).digest('hex');
     res.send(hash);
   });
+
   const handleReq = (req, res) => {
     const addr = req.query.addr || req.body.addr;
-    http.get(addr, (response) => {
+
+    http.get(addr, response => {
       let data = '';
-      response.on('data', (chunk) => { data += chunk; });
-      response.on('end', () => { res.send(data); });
+
+      response.on('data', chunk => {
+        data += chunk;
+      });
+
+      response.on('end', () => {
+        res.send(data);
+      });
     });
   };
+
   app.get('/req/', handleReq);
   app.post('/req/', handleReq);
+
   app.all('*', (req, res) => {
-    res.send('itmo408178');
+    res.send('sofia');
   });
+
   return app;
 }
